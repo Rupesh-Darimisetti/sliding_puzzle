@@ -9,7 +9,7 @@
 .history
 .svn/
 .gradle/
-node_modules/
+/node_modules/
 
 # IntelliJ related
 *.iml

@@ -4,7 +4,7 @@ import 'package:sliding_puzzle/responsive/dimensions.dart';
 import 'package:sliding_puzzle/theme/theme_manager.dart';
 import 'package:sliding_puzzle/widget/grid.dart';
 import 'package:sliding_puzzle/widget/image_widget.dart';
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 import 'package:sliding_puzzle/widget/size.dart';
 
 ThemeManager _themeManager = ThemeManager();
