@@ -21,15 +21,17 @@ class _BoardState extends State<Board> {
   int noOfMoves = 0;
   int tiles = 15;
   DateTime currentTime = DateTime.now(), pastTime = DateTime.now();
+  // Future<Stream<int>> times =
+  // Stream.periodic(const Duration(seconds: 1), (x) => 1 + x++)
+  //     as Future<Stream<int>>;
   int time = 0;
-
   @override
   void initState() {
     super.initState();
     number.shuffle();
     noOfMoves = 0;
     tiles = tiles;
-    time = pastTime.second - currentTime.second;
+    time = currentTime.minute;
     pastTime = DateTime.now();
   }
 
@@ -37,76 +39,129 @@ class _BoardState extends State<Board> {
   Widget build(BuildContext context) {
     // TextTheme _textTheme = Theme.of(context).textTheme;
     bool isDark = Theme.of(context).brightness == Brightness.dark;
-    time = currentTime.second;
     var tiles = number.length - 1;
     final currentWidth = MediaQuery.of(context).size.width;
-
+    time = currentTime.minute;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('sliding puzzle'),
         actions: [
           Switch(
-            value: _themeManager.themeMode == ThemeMode.dark,
-            onChanged: (newValue) {
-              _themeManager.toggleTheme(newValue);
-            },
-          ),
+              value: _themeManager.themeMode == ThemeMode.dark,
+              onChanged: (newValue) => _themeManager.toggleTheme(newValue)),
+          isDark ? const Icon(Icons.dark_mode) : const Icon(Icons.sunny),
         ],
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Align(
-              alignment: Alignment.center,
-              child: ImageDisplay('assets/images/*.jpg'),
-            ),
-            Align(
-              alignment: currentWidth <= mobileWidth
-                  ? Alignment.center
-                  : Alignment.centerLeft,
-              child: Text("Puzzle Challenge",
-                  style: GoogleFonts.roboto(
-                    color: isDark ? Colors.greenAccent : Colors.blue,
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                  )),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Align(
-                alignment: currentWidth <= mobileWidth
-                    ? Alignment.center
-                    : Alignment.centerLeft,
-                child: Text("$noOfMoves Moves | $tiles tiles",
-                    style: GoogleFonts.roboto(
-                      color: isDark ? Colors.greenAccent : Colors.blue,
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                    )),
-              ),
-            ),
-            addVerticalSpace(20),
+        child: currentWidth <= tabletWidth
+            ? // Mobile and tablet devices
             Center(
-                child: Text(parseTime(pastTime.second - time),
-                    style: GoogleFonts.roboto(
-                        color: isDark ? Colors.greenAccent : Colors.black,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold))),
-            addVerticalSpace(10),
-            Align(
-              child: Grid(number, onClick),
-            ),
-            addVerticalSpace(currentWidth <= mobileWidth ? 10 : 50),
-            Align(
-              alignment: currentWidth <= mobileWidth
-                  ? Alignment.center
-                  : Alignment.centerLeft,
-              child: ElevatedButton(
-                  onPressed: () => (number.shuffle()),
-                  child: const Text('Shuffle')),
-            ),
-          ],
-        ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      addVerticalSpace(20),
+                      ImageDisplay('assets/images/logo1.jpg'),
+                      addVerticalSpace(10),
+                      Text("Puzzle Challenge",
+                          style: GoogleFonts.roboto(
+                            color: isDark ? Colors.greenAccent : Colors.blue,
+                            fontSize: 40,
+                            fontWeight: FontWeight.bold,
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("$noOfMoves Moves | $tiles tiles",
+                            style: GoogleFonts.roboto(
+                              color: isDark ? Colors.greenAccent : Colors.blue,
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ),
+                      Row(
+                        children: [
+                          addHorizontalSpace(currentWidth <= mobileWidth
+                              ? currentWidth * .3
+                              : currentWidth * .4),
+                          Text(
+                            parseTime(time),
+                            style: GoogleFonts.roboto(
+                                color:
+                                    isDark ? Colors.greenAccent : Colors.black,
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          addHorizontalSpace(10),
+                          const Icon(Icons.timer_sharp),
+                        ],
+                      ),
+                      addVerticalSpace(10),
+                      Grid(number, onClick),
+                      addVerticalSpace(30),
+                      ElevatedButton(
+                          onPressed: () => (number.shuffle()),
+                          child: const Text('Shuffle')),
+                      addVerticalSpace(30),
+                    ],
+                  ),
+                ),
+              )
+            : //Destop View
+            Column(
+                children: [
+                  ImageDisplay('assets/images/logo.jpg'),
+                  Row(
+                    children: [
+                      addHorizontalSpace(30),
+                      Column(
+                        children: [
+                          Text("Puzzle \nChallenge",
+                              style: GoogleFonts.roboto(
+                                color:
+                                    isDark ? Colors.greenAccent : Colors.black,
+                                fontSize: 60,
+                                fontWeight: FontWeight.w500,
+                              )),
+                          addVerticalSpace(15),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text("$noOfMoves Moves | $tiles tiles",
+                                style: GoogleFonts.roboto(
+                                  color:
+                                      isDark ? Colors.greenAccent : Colors.blue,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                          ),
+                          addVerticalSpace(50),
+                          ElevatedButton(
+                              onPressed: () => (number.shuffle()),
+                              child: const Text('Shuffle')),
+                        ],
+                      ),
+                      addHorizontalSpace(150),
+                      addVerticalSpace(600),
+                      Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(parseTime(time),
+                                  style: GoogleFonts.roboto(
+                                      color: isDark
+                                          ? Colors.greenAccent
+                                          : Colors.black,
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold)),
+                              addHorizontalSpace(10),
+                              const Icon(Icons.timer_sharp),
+                            ],
+                          ),
+                          addVerticalSpace(50),
+                          Grid(number, onClick),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
       ),
     );
   }
@@ -132,9 +187,7 @@ class _BoardState extends State<Board> {
       int nextNumber = numberList[i];
       if (first > nextNumber) return false;
       first = nextNumber;
-      tiles--;
     }
-    tiles--;
     return true;
   }
 
@@ -156,6 +209,6 @@ class _BoardState extends State<Board> {
 
     final seconds = duration.inSeconds.remainder(60).toString().padLeft(2, '0');
 
-    return "$days - $hours:$minutes:$seconds";
+    return "$days Days  $hours:$minutes:$seconds";
   }
 }

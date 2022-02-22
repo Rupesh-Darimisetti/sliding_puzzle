@@ -12,13 +12,10 @@ class Grid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
-    double width = MediaQuery.of(context).size.width <= mobileWidth ? 0.4 : 0.2;
-    double height =
-        MediaQuery.of(context).size.height <= mobileWidth ? 0.4 : 0.5;
 
     return SizedBox(
-      height: MediaQuery.of(context).size.height * height,
-      width: MediaQuery.of(context).size.width * width,
+      height: 400,
+      width: 400,
       child: SafeArea(
         child: GridView.builder(
             itemCount: number.length,
@@ -37,7 +34,7 @@ class Grid extends StatelessWidget {
                         ),
                         child: Container(
                           decoration: BoxDecoration(
-                              color: isDark ? Colors.black : Colors.white,
+                              color: isDark ? Colors.black : Colors.blue[800],
                               borderRadius: BorderRadius.circular(8)),
                           child: Center(
                             child: FittedBox(
@@ -46,8 +43,8 @@ class Grid extends StatelessWidget {
                                 style: GoogleFonts.roboto(
                                   color: isDark
                                       ? Colors.greenAccent
-                                      : Colors.black38,
-                                  fontSize: 50,
+                                      : Colors.white,
+                                  fontSize: 25,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
